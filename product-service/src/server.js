@@ -5,7 +5,7 @@ require("dotenv").config();
 const sequelize = require("./config/database");
 
 const { DataTypes } = require("sequelize");
-const Product = require("./models/Product")(sequelize, DataTypes);
+const Product = require("./models/Product")(sequelize, DataTypes);//these all are the packages.
 
 const app = express();
 
@@ -18,11 +18,11 @@ app.get("/", (req, res) => {
     res.send("Product Service is running");
 });
 
-sequelize.authenticate()
-    .then(() => {
-        console.log("Database connected successfully");
+sequelize.authenticate() //test the database connection
+    .then(() => { //if connection or username or evrything is ok then it execute the console.
+        console.log("Database connected successfully");//showing in the terminal.
 
-        return sequelize.sync();
+        return sequelize.sync();//sync the db tables.
     })
     .then(() => {
         console.log("Database tables synchronized");
