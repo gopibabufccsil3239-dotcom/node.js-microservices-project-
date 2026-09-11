@@ -22,12 +22,61 @@ const productService = {
             stock
         });
     },
+     getAllProducts: async ({
+    page = 1,
+    limit = 10,
+    sortBy = "createdAt",
+    order = "DESC"
+} = {}) => {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const sortOrder = String(order).toUpperCase();
 
-    getAllProducts: async () => {
-        return productRepository.findAll();
-    },
+    if (!Number.isInteger(pageNumber) || pageNumber < 1) {
+        throw new Error("Page must be a positive number");
+    }
 
-    getProductById: async (id) => {
+    if (!Number.isInteger(limitNumber) || limitNumber < 1 || limitNumber > 100) {
+        throw new Error("Limit must be between 1 and 100");
+    }
+
+    const allowedSortFields = [
+        "id",
+        "name",
+        "price",
+        "stock",
+        "createdAt",
+        "updatedAt"
+    ];
+
+    if (!allowedSortFields.includes(sortBy)) {
+        throw new Error("Invalid sort field");
+    }
+
+    if (!["ASC", "DESC"].includes(sortOrder)) {
+        throw new Error("Order must be ASC or DESC");
+    }
+
+    const result = await productRepository.findAll({
+        page: pageNumber,
+        limit: limitNumber,
+        sortBy,
+        order: sortOrder
+    });
+
+    const products = result.rows.map((product) => product.toJSON());
+
+    return {
+        data: products,
+        pagination: {
+            totalItems: result.count,
+            currentPage: pageNumber,
+            pageSize: limitNumber,
+            totalPages: Math.ceil(result.count / limitNumber)
+        }
+    };
+},
+   getProductById: async (id) => {
         const product = await productRepository.findById(id);
 
         if (!product) {

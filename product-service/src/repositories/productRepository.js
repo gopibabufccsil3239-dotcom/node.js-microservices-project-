@@ -9,9 +9,20 @@ const productRepository = {           //teh create a product repository object.w
         return Product.create(productData);
     },
 
-    findAll: async () => {
-        return Product.findAll();
-    },
+    findAll: async ({
+    page = 1,
+    limit = 10,
+    sortBy = "createdAt",
+    order = "DESC"
+} = {}) => {
+    const offset = (page - 1) * limit;
+
+    return Product.findAndCountAll({
+        limit,
+        offset,
+        order: [[sortBy, order]]
+    });
+},
 
     findById: async (id) => {
         return Product.findByPk(id);
