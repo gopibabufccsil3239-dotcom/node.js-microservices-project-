@@ -6,11 +6,13 @@ const sequelize = require("./config/database");
 
 const { DataTypes } = require("sequelize");
 const Product = require("./models/Product")(sequelize, DataTypes);//these all are the packages.
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/products", productRoutes);
 
 const PORT = process.env.PORT || 5001;
 
