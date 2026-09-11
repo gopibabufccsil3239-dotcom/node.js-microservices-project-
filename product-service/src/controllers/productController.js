@@ -24,7 +24,19 @@ const productController = {
         });
     }
 },
+getProductsAbovePrice: async (req, res) => {
+    try {
+        const products = await productService.getProductsAbovePrice(
+            req.query.price
+        );
 
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    }
+},
     getProductById: async (req, res) => {
         try {
             const product = await productService.getProductById(req.params.id);

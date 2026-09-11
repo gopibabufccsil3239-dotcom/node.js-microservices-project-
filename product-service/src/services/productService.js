@@ -76,6 +76,15 @@ const productService = {
         }
     };
 },
+getProductsAbovePrice: async (minimumPrice) => {
+    const price = Number(minimumPrice);
+
+    if (Number.isNaN(price) || price < 0) {
+        throw new Error("Price must be a valid positive number");
+    }
+
+    return productRepository.findAbovePrice(price);
+},
    getProductById: async (id) => {
         const product = await productRepository.findById(id);
 

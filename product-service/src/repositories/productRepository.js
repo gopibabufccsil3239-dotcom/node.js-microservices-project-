@@ -23,6 +23,23 @@ const productRepository = {           //teh create a product repository object.w
         order: [[sortBy, order]]
     });
 },
+findAbovePrice: async (minimumPrice) => {
+    const [products] = await sequelize.query(
+        `
+        SELECT *
+        FROM products
+        WHERE price > :minimumPrice
+        ORDER BY price ASC
+        `,
+        {
+            replacements: {
+                minimumPrice
+            }
+        }
+    );
+
+    return products;
+},
 
     findById: async (id) => {
         return Product.findByPk(id);
